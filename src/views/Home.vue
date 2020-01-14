@@ -1,18 +1,18 @@
 <template>
   <div class="home">
-    <GeoMap/>
+    <HierarchyList1/>
   </div>
 </template>
 
 <script>
   // @ is an alias to /src
 
-  import GeoMap from '@/components/TreeView';
+  import HierarchyList1 from '@/components/HierarchyList1';
 
   export default {
     name: 'home',
     components: {
-      GeoMap
+      HierarchyList1: HierarchyList1
     },
   };
 </script>

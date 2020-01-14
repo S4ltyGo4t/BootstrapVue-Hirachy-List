@@ -1,1 +1,1 @@
-# BootstrapVue-Hirachy-List
+# BootstrapVue-Hirachie-List

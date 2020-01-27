@@ -3,16 +3,16 @@ export default class Node {
   private parent: Node | null;
   public value: string;
   public checked: boolean;
-  private intermediate: boolean;
   public id: string;
+  public showChildren: boolean;
 
   constructor(value: string, id: string) {
     this.value = value;
     this.id = id;
     this.parent = null;
     this.children = [];
+    this.showChildren = false;
     this.checked = false;
-    this.intermediate = false;
   }
 
   public addChild(child: Node): void {
@@ -28,18 +28,14 @@ export default class Node {
     return this.children;
   }
 
-  public getIntermediate() {
-    return this.intermediate;
-  }
-
-  public setIntermediate(val: boolean) {
-    this.intermediate = val;
-  }
-
   public toggleNodeState() {
     this.checked = !this.checked;
     this.changeChildrenState(this.checked);
     this.updateParent();
+  }
+
+  public toggleShow() {
+    this.showChildren = !this.showChildren;
   }
 
   private changeChildrenState(state: boolean) {

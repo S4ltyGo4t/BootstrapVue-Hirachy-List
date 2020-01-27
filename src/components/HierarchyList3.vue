@@ -5,7 +5,7 @@
       <b-row>
 
         <b-col v-if="!!rootNode">
-          <h1>Hacking</h1>
+          <h1>Bootstrap ListGroup</h1>
           <hr>
           <CustomCheckbox :key="rootNode.id" :cb-model="rootNode"/>
           <b-list-group class="ml-4" v-for="hierarchy_01 in rootNode.getChildren()">
@@ -23,20 +23,28 @@
         </b-col>
 
         <b-col v-if="!!rootNode">
-          <h1>Hacking</h1>
+          <h1>Plain UL</h1>
           <hr>
           <CustomCheckbox :key="rootNode.id" :cb-model="rootNode"/>
-          <ul class="ml-4" v-for="hierarchy_01 in rootNode.getChildren()">
-            <CustomCheckbox :cb-model="hierarchy_01"/>
-            <b-list-group class="ml-4" v-for="hierarchy_02 in hierarchy_01.getChildren()">
-              <CustomCheckbox :cb-model="hierarchy_02"/>
-              <b-list-group class="ml-4 test" v-for="hierarchy_03 in hierarchy_02.getChildren()">
-                <CustomCheckbox :cb-model="hierarchy_03"/>
-                <b-list-group class="ml-4" v-for="hierarchy_04 in hierarchy_03.getChildren()">
-                  <CustomCheckbox :cb-model="hierarchy_04"/>
-                </b-list-group>
-              </b-list-group>
-            </b-list-group>
+          <ul class="nested" :class="{active: rootNode.showChildren}">
+            <li v-for="hierarchy_01 in rootNode.getChildren()">
+              <CustomCheckbox :cb-model="hierarchy_01"/>
+              <ul class="nested" :class="{active: hierarchy_01.showChildren}">
+                <li v-for="hierarchy_02 in hierarchy_01.getChildren()">
+                  <CustomCheckbox :cb-model="hierarchy_02"/>
+                  <ul class="nested" :class="{active: hierarchy_02.showChildren}">
+                    <li v-for="hierarchy_03 in hierarchy_02.getChildren()">
+                      <CustomCheckbox :cb-model="hierarchy_03"/>
+                      <ul>
+                        <li v-for="hierarchy_04 in hierarchy_03.getChildren()">
+                          <CustomCheckbox :cb-model="hierarchy_04"/>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
           </ul>
         </b-col>
 
@@ -61,7 +69,6 @@
     testNode: Node = new Node('test', 'any_id');
 
     mounted() {
-      this.testNode.setIntermediate(true);
       fetch('http://localhost:3000')
         .then(response => {
           response.json().then(jo => {
@@ -85,8 +92,10 @@
           }
           h1Node.addChild(h2Node);
         }
+        ret.showChildren = true;
         ret.addChild(h1Node);
       }
+
       return ret;
     }
 
@@ -102,11 +111,52 @@
       // TODO CHANGE ICON HERE
     }
 
+    collapse(element: any) {
+      element.isActive = !element.isActive;
+    }
+
   }
 </script>
 
 <style scoped>
-  .test {
-    visibility: hidden;
+  ul, #myUL {
+    list-style-type: none;
   }
+
+  #myUL {
+    margin: 0;
+    padding: 0;
+  }
+
+  .caret {
+    cursor: pointer;
+    -webkit-user-select: none; /* Safari 3.1+ */
+    -moz-user-select: none; /* Firefox 2+ */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none;
+  }
+
+  .caret::before {
+    content: "\25B6";
+    color: black;
+    display: inline-block;
+    margin-right: 6px;
+  }
+
+  .caret-down::before {
+    -ms-transform: rotate(90deg); /* IE 9 */
+    -webkit-transform: rotate(90deg); /* Safari */
+    transform: rotate(90deg);
+  }
+
+  .nested {
+    display: none;
+    cursor: pointer;
+  }
+
+  .active {
+    display: block;
+    cursor: pointer;
+  }
+
 </style>

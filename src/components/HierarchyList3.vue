@@ -1,132 +1,101 @@
 <template>
-  <div class="HierarchyList2">
-    <b-list-group flush>
+  <div class="HierarchyList3">
 
-      <b-list-group-item class="d-flex align-items-left">
-        <b-checkbox>
-        </b-checkbox>
-        <b-icon class="ml-2" icon="tools" scale="2" variant="danger"/>
-        <span class="ml-2"><b>Hierarchy_01</b></span>
-        <b-icon class="ml-2 caret" icon="chevron-right" scale="2" variant="danger"
-                v-b-toggle.acc-1 @click="changeIcon"/>
-        <b-collapse id="acc-1">
-          <b-list-group flush>
-            <b-list-group-item class="d-flex justify-content-between align-items-center">
-              <b-checkbox>
-                <b-icon class="ml-2" icon="tools" scale="2" variant="warning"/>
-                <span class="ml-2"><b>Hierarchy_02</b></span>
-              </b-checkbox>
-            </b-list-group-item>
-            <b-list-group-item class="d-flex justify-content-between align-items-center">
-              <b-checkbox>
-                <b-icon class="ml-2" icon="tools" scale="2" variant="warning"/>
-                <span class="ml-2"><b>Hierarchy_02</b></span>
-              </b-checkbox>
-            </b-list-group-item>
+    <b-container>
+      <b-row>
+
+        <b-col v-if="!!rootNode">
+          <h1>Hacking</h1>
+          <hr>
+          <CustomCheckbox :key="rootNode.id" :cb-model="rootNode"/>
+          <b-list-group class="ml-4" v-for="hierarchy_01 in rootNode.getChildren()">
+            <CustomCheckbox :cb-model="hierarchy_01"/>
+            <b-list-group class="ml-4" v-for="hierarchy_02 in hierarchy_01.getChildren()">
+              <CustomCheckbox :cb-model="hierarchy_02"/>
+              <b-list-group class="ml-4 test" v-for="hierarchy_03 in hierarchy_02.getChildren()">
+                <CustomCheckbox :cb-model="hierarchy_03"/>
+                <b-list-group class="ml-4" v-for="hierarchy_04 in hierarchy_03.getChildren()">
+                  <CustomCheckbox :cb-model="hierarchy_04"/>
+                </b-list-group>
+              </b-list-group>
+            </b-list-group>
           </b-list-group>
-        </b-collapse>
-      </b-list-group-item>
+        </b-col>
 
+        <b-col v-if="!!rootNode">
+          <h1>Hacking</h1>
+          <hr>
+          <CustomCheckbox :key="rootNode.id" :cb-model="rootNode"/>
+          <ul class="ml-4" v-for="hierarchy_01 in rootNode.getChildren()">
+            <CustomCheckbox :cb-model="hierarchy_01"/>
+            <b-list-group class="ml-4" v-for="hierarchy_02 in hierarchy_01.getChildren()">
+              <CustomCheckbox :cb-model="hierarchy_02"/>
+              <b-list-group class="ml-4 test" v-for="hierarchy_03 in hierarchy_02.getChildren()">
+                <CustomCheckbox :cb-model="hierarchy_03"/>
+                <b-list-group class="ml-4" v-for="hierarchy_04 in hierarchy_03.getChildren()">
+                  <CustomCheckbox :cb-model="hierarchy_04"/>
+                </b-list-group>
+              </b-list-group>
+            </b-list-group>
+          </ul>
+        </b-col>
 
-      <b-list-group-item class="d-flex justify-content-between align-items-center">
-        <b-checkbox>
-          <b-icon class="ml-2" icon="tools" scale="2" variant="warning"/>
-          <span class="ml-2"><b>Hierarchy_01</b></span>
-        </b-checkbox>
-      </b-list-group-item>
-
-
-      <b-list-group-item class="d-flex justify-content-between align-items-left">
-        <b-checkbox>
-          <b-icon class="ml-2" icon="tools" scale="2" variant="info"/>
-          <span class="ml-2"><b>Hierarchy_01</b></span>
-        </b-checkbox>
-      </b-list-group-item>
-
-
-    </b-list-group>
-
-    <hr>
-
-    <b-button @click="testFunction">Run!!!</b-button>
-
-    <b-checkbox-group stacked v-if="!!fetchedData" v-for="Hierarchy_01 in fetchedData">
-      <b-form-checkbox
-        :value="Hierarchy_01.value"
-        @change="Hierarchy_01.insertFunctionNameHere()"
-        v-model="Hierarchy_01.checked"
-        :indeterminate="Hierarchy_01.getIntermediate()">
-        {{Hierarchy_01.value}}
-        <b-checkbox-group stacked v-for="Hierarchy_02 in Hierarchy_01.getChildren()">
-          <b-form-checkbox
-            :value="Hierarchy_02.value"
-            @change="Hierarchy_02.insertFunctionNameHere()"
-            v-model="Hierarchy_02.checked"
-            :indeterminate="Hierarchy_02.getIntermediate()">
-            {{Hierarchy_02.value}}
-            <b-checkbox-group stacked v-for="Hierarchy_03 in Hierarchy_02.getChildren()">
-              <b-form-checkbox :value="Hierarchy_03.value" v-model="Hierarchy_03.checked"
-                               @click="Hierarchy_03.insertFunctionNameHere()"
-                               :indeterminate="Hierarchy_03.getIntermediate()">
-                {{Hierarchy_03.value}}
-                <b-checkbox-group stacked v-for="Hierarchy_04 in Hierarchy_03.getChildren()">
-                  <b-form-checkbox :value="Hierarchy_04.value" v-model="Hierarchy_04.checked"
-                                   @change="Hierarchy_04.insertFunctionNameHere()"
-                                   :indeterminate="Hierarchy_04.getIntermediate()">
-                    {{Hierarchy_04.value}}
-                  </b-form-checkbox>
-                </b-checkbox-group>
-              </b-form-checkbox>
-            </b-checkbox-group>
-          </b-form-checkbox>
-        </b-checkbox-group>
-      </b-form-checkbox>
-    </b-checkbox-group>
-
+      </b-row>
+    </b-container>
   </div>
 </template>
 
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
   import Node from '@/classes/Node';
+  // import CustomCheckbox from '@/components/CustomCheckbox.vue';
 
   @Component({
-    components: {}
+    components: {CustomCheckbox: () => import('@/components/CustomCheckbox.vue')}
   })
   export default class HierarchyList3 extends Vue {
-    data: string = '';
-    fetchedData: Node[] = [];
+    get rootNode() {
+      return this.$store.state.rootNode;
+    }
+
+    testNode: Node = new Node('test', 'any_id');
 
     mounted() {
+      this.testNode.setIntermediate(true);
       fetch('http://localhost:3000')
         .then(response => {
           response.json().then(jo => {
-            this.fetchedData = this.fetchSearchResult(jo);
+            let fetchedData = this.fetchSearchResult(jo);
+            this.$store.dispatch('initRootNode', fetchedData);
           });
         });
     }
 
-    fetchSearchResult(rawResult: any): Node[] {
-      let ret: Node[] = [];
+    fetchSearchResult(rawResult: any): Node {
+      let ret: Node = new Node('root_node', 'root');
       for (let h1 of rawResult.hierarchy_01) {
-        let h1Node = new Node(h1.name);
+        let h1Node = new Node(h1.name, h1.id);
         for (let h2 of h1.hierarchy_02) {
-          let h2Node = new Node(h2.name);
+          let h2Node = new Node(h2.name, h2.id);
           for (let h3 of h2.hierarchy_03) {
-            let h3Node = new Node(h3.name);
-            let h4Node = new Node(h3.hierarchy_04);
+            let h3Node = new Node(h3.name, h3.id);
+            let h4Node = new Node(h3.hierarchy_04, h3.id);
             h3Node.addChild(h4Node);
             h2Node.addChild(h3Node);
           }
           h1Node.addChild(h2Node);
         }
-        ret.push(h1Node);
+        ret.addChild(h1Node);
       }
       return ret;
     }
 
     testFunction() {
-
+      if (!!this.rootNode) {
+        this.rootNode.printChildren();
+      } else {
+        console.log('Fetched data is null.');
+      }
     }
 
     changeIcon() {
@@ -137,9 +106,7 @@
 </script>
 
 <style scoped>
-  .caret {
-    cursor: pointer;
-    -webkit-user-select: none;
-    user-select: none;
+  .test {
+    visibility: hidden;
   }
 </style>

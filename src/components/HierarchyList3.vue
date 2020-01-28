@@ -5,16 +5,21 @@
       <b-row>
 
         <b-col v-if="!!rootNode">
-          <h1>Bootstrap ListGroup</h1>
+          <h1>Bootstrap</h1>
           <hr>
           <CustomCheckbox :key="rootNode.id" :cb-model="rootNode"/>
-          <b-list-group class="ml-4" v-for="hierarchy_01 in rootNode.getChildren()">
+          <b-list-group class="ml-4 nested" v-for="hierarchy_01 in rootNode.getChildren()"
+                        :class="{active: rootNode.showChildren}">
             <CustomCheckbox :cb-model="hierarchy_01"/>
-            <b-list-group class="ml-4" v-for="hierarchy_02 in hierarchy_01.getChildren()">
+            <b-list-group class="ml-4 nested" v-for="hierarchy_02 in hierarchy_01.getChildren()"
+                          :class="{active: hierarchy_01.showChildren}">
               <CustomCheckbox :cb-model="hierarchy_02"/>
-              <b-list-group class="ml-4 test" v-for="hierarchy_03 in hierarchy_02.getChildren()">
+              <b-list-group class="ml-4 nested" v-for="hierarchy_03 in hierarchy_02.getChildren()"
+                            :class="{active: hierarchy_02.showChildren}">
                 <CustomCheckbox :cb-model="hierarchy_03"/>
-                <b-list-group class="ml-4" v-for="hierarchy_04 in hierarchy_03.getChildren()">
+                <b-list-group class="ml-4 nested"
+                              v-for="hierarchy_04 in hierarchy_03.getChildren()"
+                              :class="{active: hierarchy_03.showChildren}">
                   <CustomCheckbox :cb-model="hierarchy_04"/>
                 </b-list-group>
               </b-list-group>
@@ -23,7 +28,7 @@
         </b-col>
 
         <b-col v-if="!!rootNode">
-          <h1>Plain UL</h1>
+          <h1>Plain</h1>
           <hr>
           <CustomCheckbox :key="rootNode.id" :cb-model="rootNode"/>
           <ul class="nested" :class="{active: rootNode.showChildren}">
@@ -35,7 +40,7 @@
                   <ul class="nested" :class="{active: hierarchy_02.showChildren}">
                     <li v-for="hierarchy_03 in hierarchy_02.getChildren()">
                       <CustomCheckbox :cb-model="hierarchy_03"/>
-                      <ul>
+                      <ul class="nested" :class="{active: hierarchy_03.showChildren}">
                         <li v-for="hierarchy_04 in hierarchy_03.getChildren()">
                           <CustomCheckbox :cb-model="hierarchy_04"/>
                         </li>
@@ -56,7 +61,6 @@
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
   import Node from '@/classes/Node';
-  // import CustomCheckbox from '@/components/CustomCheckbox.vue';
 
   @Component({
     components: {CustomCheckbox: () => import('@/components/CustomCheckbox.vue')}
@@ -107,10 +111,6 @@
       }
     }
 
-    changeIcon() {
-      // TODO CHANGE ICON HERE
-    }
-
     collapse(element: any) {
       element.isActive = !element.isActive;
     }
@@ -119,44 +119,16 @@
 </script>
 
 <style scoped>
-  ul, #myUL {
+  ul {
     list-style-type: none;
-  }
-
-  #myUL {
-    margin: 0;
-    padding: 0;
-  }
-
-  .caret {
-    cursor: pointer;
-    -webkit-user-select: none; /* Safari 3.1+ */
-    -moz-user-select: none; /* Firefox 2+ */
-    -ms-user-select: none; /* IE 10+ */
-    user-select: none;
-  }
-
-  .caret::before {
-    content: "\25B6";
-    color: black;
-    display: inline-block;
-    margin-right: 6px;
-  }
-
-  .caret-down::before {
-    -ms-transform: rotate(90deg); /* IE 9 */
-    -webkit-transform: rotate(90deg); /* Safari */
-    transform: rotate(90deg);
   }
 
   .nested {
     display: none;
-    cursor: pointer;
   }
 
   .active {
     display: block;
-    cursor: pointer;
   }
 
 </style>

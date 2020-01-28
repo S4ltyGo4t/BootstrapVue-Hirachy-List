@@ -1,6 +1,7 @@
 <template>
   <b-row>
-    <div v-if="cbModel.getChildren().length > 1" @click="cbModel.toggleShow()">
+    <div v-if="cbModel.getChildren().length > 0" @click="cbModel.toggleShow()"
+         style="cursor: pointer">
       <b-icon-chevron-down class="mr-1 h5" v-if="cbModel.showChildren"/>
       <b-icon-chevron-right class="mr-1 h5" v-else/>
     </div>
@@ -9,7 +10,7 @@
                 @change="cbModel.toggleNodeState()">
 
     </b-checkbox>
-    <span @click="cbModel.toggleNodeState()">{{cbModel.value}}</span>
+    <span @click="cbModel.toggleNodeState()" style="cursor: pointer">{{cbModel.value}}</span>
   </b-row>
 
 </template>

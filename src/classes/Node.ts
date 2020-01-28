@@ -58,6 +58,13 @@ export default class Node {
         });
         this.parent.checked = childrenCheckStates.every(val => val);
       }
+    } else {
+      // case for root node
+      let childrenCheckStates: boolean[] = [];
+      this.getChildren().forEach(c => {
+        childrenCheckStates.push(c.checked);
+      });
+      this.checked = childrenCheckStates.every(val => val);
     }
   }
 
@@ -74,7 +81,9 @@ export default class Node {
     } else {
       let childrenCheckStates: boolean[] = [];
       this.getChildren().forEach(c => {
-        if (c.isIntermediate() || c.checked) {
+        if (c.isIntermediate()) {
+          return true;
+        } else if (c.checked) {
           childrenCheckStates.push(c.checked);
         }
       });
@@ -82,6 +91,5 @@ export default class Node {
         return false;
       } else return childrenCheckStates.length !== this.getChildren().length;
     }
-
   }
 }

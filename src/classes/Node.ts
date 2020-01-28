@@ -57,6 +57,7 @@ export default class Node {
           childrenCheckStates.push(c.checked);
         });
         this.parent.checked = childrenCheckStates.every(val => val);
+        this.parent.updateParent();
       }
     } else {
       // case for root node
